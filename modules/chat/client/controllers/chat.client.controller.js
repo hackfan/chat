@@ -5,10 +5,9 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
     function($scope, Socket) {
         var TYPING_TIMER_LENGTH = 400; // ms
         var username;
-        var connected = false;
-        var typing = false;
+        $scope.typing = false;
         var lastTypingTime;
-        var typingUser = {};
+        $scope.typingUser = null;
 
     	// Create a messages array
         $scope.messages = [];
@@ -37,28 +36,25 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
 
         // Remove the event listener when the controller instance is destroyed
         $scope.$on('$destroy', function() {
+            Socket.emit('remove user');
             Socket.removeListener('chatMessage');
         });
 
-
         // Updates the typing event
         function updateTyping () {
-            if (connected) {
-              if (!typing) {
-                typing = true;
-                socket.emit('typing');
+            if (!$scope.typing) {
+                Socket.emit('typing');
             }
             lastTypingTime = (new Date()).getTime();
 
             setTimeout(function () {
                 var typingTimer = (new Date()).getTime();
                 var timeDiff = typingTimer - lastTypingTime;
-                if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                    socket.emit('stop typing');
-                    typing = false;
+                if (timeDiff >= TYPING_TIMER_LENGTH && $scope.typing) {
+                    Socket.emit('stop typing');
+                    $scope.typing = false;
                 }
-              }, TYPING_TIMER_LENGTH);
-            }
+            }, TYPING_TIMER_LENGTH);
         }
 
 
@@ -69,8 +65,8 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
             // When the client hits ENTER on their keyboard
             if (event.which === 13) {
                 $scope.sendMessage();
-                socket.emit('stop typing');
-                typing = false;                
+                Socket.emit('stop typing');
+                $scope.typing = false;                
             }
         };
 
@@ -78,10 +74,6 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
         $scope.login = function() {
             Socket.emit('add user');
         };
-
-        Socket.on('login', function(data) {
-            $scope.numUsers = data.numUsers;
-        });
 
         Socket.on('logout', function(data) {
             $scope.numUsers = data.numUsers;
@@ -93,6 +85,16 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
 
         Socket.on('user left', function(data) {
             $scope.numUsers = data.numUsers;
+        });
+
+        Socket.on('typing', function(data) {            
+            $scope.typingUser = data.username;
+            $scope.typing = true;
+        });
+
+        Socket.on('stop typing', function(data) {            
+            $scope.typing = false;
+            $scope.typingUser = null;
         });
 
         $scope.login();

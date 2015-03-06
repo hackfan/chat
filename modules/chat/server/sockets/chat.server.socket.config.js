@@ -6,7 +6,6 @@ module.exports = function(io, socket) {
     // usernames which are connected to the chat now
     var usernames = {};
     var numUsers = 0;
-    var addedUser = false;
 
 	// Emit the status event when a new socket client is connected
     io.emit('chatMessage', {
@@ -50,28 +49,43 @@ module.exports = function(io, socket) {
         // add the client's username to the global list
         usernames[socket.request.user.username] = socket.request.user.username;
         ++numUsers;
-        addedUser = true;
-        socket.emit('login', {
+        // echo globally (all clients) that a person has connected
+        io.emit('user joined', {
+            username: socket.request.user.username,
             numUsers: numUsers
         });
+    });
+
+    // When the client emits 'remove user', this listens and executes
+    socket.on('remove user', function() {
+        // remove the client's username to the global list
+        delete usernames[socket.request.user.username];
+        --numUsers;
+        socket.broadcast.emit('chatMessage', {
+            type: 'status',
+            text: 'disconnected',
+            created: Date.now(),
+            profileImageURL: socket.request.user.profileImageURL,
+            username: socket.request.user.username
+        });
         // echo globally (all clients) that a person has connected
-        socket.broadcast.emit('user joined', {
-            username: socket.username,
+        socket.broadcast.emit('user left', {
+            username: socket.request.user.username,
             numUsers: numUsers
         });
     });
 
     // when the client emits 'typing', we broadcast it to others
     socket.on('typing', function () {
-        socket.broadcast.emit('typing', {
-          username: socket.username
+        io.emit('typing', {
+          username: socket.request.user.username
       });
     });
 
-      // when the client emits 'stop typing', we broadcast it to others
-      socket.on('stop typing', function () {
-        socket.broadcast.emit('stop typing', {
-          username: socket.username
+    // when the client emits 'stop typing', we broadcast it to others
+    socket.on('stop typing', function () {
+        io.emit('stop typing', {
+          username: socket.request.user.username
       });
     });
 };
