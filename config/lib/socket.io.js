@@ -50,6 +50,11 @@ module.exports = function(app, db) {
         });
     });
 
+
+    // usernames which are connected to the chat now
+    io.usernames = {};
+    io.numUsers = 0;
+
     // Add an event listener to the 'connection' event
     io.on('connection', function(socket) {
         config.files.server.sockets.forEach(function(socketConfiguration) {

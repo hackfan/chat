@@ -7,7 +7,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
         if (Authentication.user) {
             this.socket = io();
             // Tell the server your username
-            this.socket.emit('add user');
+            //this.socket.emit('add user');
         } else {
             $state.go('home');
         }

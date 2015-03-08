@@ -13,7 +13,9 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
         $scope.messages = [];
 
         // Number of participating users
-        $scope.numUsers = 1;
+        $scope.numUsers = 0;
+        $scope.usernames = [];
+
         
         // Add an event listener to the 'chatMessage' event
         Socket.on('chatMessage', function(message) {
@@ -70,10 +72,8 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
             }
         };
 
-        // Whenever the user login, emit 'add user'
-        $scope.login = function() {
-            Socket.emit('add user');
-        };
+        // Whenever the user joins, emit 'add user'
+        Socket.emit('add user');
 
         Socket.on('logout', function(data) {
             $scope.numUsers = data.numUsers;
@@ -81,10 +81,12 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
 
         Socket.on('user joined', function(data) {
             $scope.numUsers = data.numUsers;
+            $scope.usernames = data.usernames;
         });
 
         Socket.on('user left', function(data) {
             $scope.numUsers = data.numUsers;
+            $scope.usernames = data.usernames;
         });
 
         Socket.on('typing', function(data) {            
@@ -96,7 +98,5 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
             $scope.typing = false;
             $scope.typingUser = null;
         });
-
-        $scope.login();
     }
 ]); 
