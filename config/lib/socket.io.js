@@ -51,7 +51,7 @@ module.exports = function(app, db) {
     });
 
 
-    // usernames which are connected to the chat now
+    // usernames which are connected to the chat now    
     io.usernames = {};
     io.numUsers = 0;
 

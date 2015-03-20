@@ -24,14 +24,16 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
         
         // Create a controller method for sending messages
         $scope.sendMessage = function() {
-        	// Create a new message object
-            var message = {
-                text: this.messageText
-            };
-            
-            // Emit a 'chatMessage' message event
-            Socket.emit('chatMessage', message);
-            
+            // Don't send blank messages
+            if (this.messageText.length && this.messageText.trim().length) {    
+        	    // Create a new message object
+                var message = {
+                    text: this.messageText
+                };
+                
+                // Emit a 'chatMessage' message event
+                Socket.emit('chatMessage', message);               
+            }
             // Clear the message text
             this.messageText = '';
         };

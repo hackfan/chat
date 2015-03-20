@@ -7,6 +7,10 @@ angular.module('chat').config(['$stateProvider',
 		state('chat', {
 			url: '/chat',
 			templateUrl: 'modules/chat/views/chat.client.view.html'
+		}).
+		state('chat.join', {
+			url: '/chat/:roomId',
+			templateUrl: 'modules/chat/views/chat.client.view.html'
 		});
 	}
 ]);
