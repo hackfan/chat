@@ -1,5 +1,5 @@
 <!-- The chat view -->
-<section class="chat-container" data-ng-controller="ChatController">
+<div class="chat-container" data-ng-controller="ChatController">
     <div class="chat-box">
         <!-- Display how many users are connected -->
         <div class="users">
@@ -8,7 +8,7 @@
         </div>
         <!-- List all messages -->
         <ul class="chat-area list-unstyled">
-            <li class="col-xs-12 col-md-offset-4 col-md-4 chat-message" data-ng-repeat="message in messages">
+            <li class="col-xs-12 col-md-12 chat-message" data-ng-repeat="message in messages">
                 <small class="pull-right text-muted" data-ng-bind="message.created | date:'mediumTime'"></small>
                 <img data-ng-src="{{message.profileImageURL}}" alt="{{message.username}}" class="pull-left chat-profile-image"/>
                 <div class="pull-left chat-message-details">
@@ -19,14 +19,14 @@
         </ul>
     </div>
 	<!-- The message form -->
-	<form class="inputMessage col-xs-12 col-md-offset-4 col-md-4">
+	<form class="inputMessage col-xs-12 col-md-12">
 		<fieldset class="row">
 			<div class="input-group">
-				<textarea id="messageText" class="form-control" data-ng-model="messageText" placeholder="Enter new message" ng-keypress="keydown($event);" rows="3"></textarea>
+				<textarea id="messageText" class="form-control" data-ng-model="messageText" placeholder="Enter new message" ng-keypress="keydown($event);" style="height:60px"></textarea>
                 <span class="input-group-btn">
                     <label class="btn btn-primary inputHeight sendBtn" ng-click="sendMessage();">Send</label>
                 </span>
 			</div>
 		</fieldset>
 	</form>
-</section>
+</div>

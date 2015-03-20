@@ -36,14 +36,13 @@
 }
 
 .inputMessage {
-  bottom: 0;
-  height: 60px;
-  left: 0;
-  outline: none;
-  padding-left: 10px;
-  position: absolute;
-  right: 0;
-  width: 100%;
+	bottom: 0;
+	height: 60px;
+	left: 0;
+	padding-left: 10px;
+	position: absolute;
+	right: 0;
+	width: 100%;
 }
 
 .inputHeight {

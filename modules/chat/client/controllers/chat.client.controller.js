@@ -19,7 +19,7 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
         
         // Add an event listener to the 'chatMessage' event
         Socket.on('chatMessage', function(message) {
-            $scope.messages.unshift(message);
+            $scope.messages.push(message);
         });
         
         // Create a controller method for sending messages
@@ -40,7 +40,7 @@ angular.module('chat').controller('ChatController', ['$scope', 'Socket',
 
         // Remove the event listener when the controller instance is destroyed
         $scope.$on('$destroy', function() {
-            Socket.emit('remove user');
+            Socket.emit('disconnect');
             Socket.removeListener('chatMessage');
         });
 

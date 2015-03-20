@@ -18,7 +18,7 @@ module.exports = function(io, socket) {
     socket.on('disconnect', function() {
         --io.numUsers;
         delete io.usernames[socket.request.user.username];
-        io.emit('chatMessage', {
+        socket.broadcast.emit('chatMessage', {
             type: 'status',
             text: 'disconnected',
             created: Date.now(),
@@ -51,26 +51,6 @@ module.exports = function(io, socket) {
             created: Date.now(),
             profileImageURL: socket.request.user.profileImageURL,
             username: socket.request.user.username
-        });
-    });
-
-    // When the client emits 'remove user', this listens and executes
-    socket.on('remove user', function() {
-        // remove the client's username to the global list
-        delete io.usernames[socket.request.user.username];
-        --io.numUsers;
-        socket.broadcast.emit('chatMessage', {
-            type: 'status',
-            text: 'disconnected',
-            created: Date.now(),
-            profileImageURL: socket.request.user.profileImageURL,
-            username: socket.request.user.username
-        });
-        // echo globally (all clients) that a person has connected
-        socket.broadcast.emit('user left', {
-            username: socket.request.user.username,
-            numUsers: io.numUsers,
-            usernames: io.usernames
         });
     });
 
