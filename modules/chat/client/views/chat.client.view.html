@@ -7,7 +7,7 @@
             <label style="float:right" ng-show="typing">{{typingUser}} is typing...</label>
         </div>
         <!-- List all messages -->
-        <ul class="chat-area list-unstyled">
+        <ul scroll-glue class="chat-area list-unstyled">
             <li class="col-xs-12 col-md-12 chat-message" data-ng-repeat="message in messages">
                 <small class="pull-right text-muted" data-ng-bind="message.created | date:'mediumTime'"></small>
                 <img data-ng-src="{{message.profileImageURL}}" alt="{{message.username}}" class="pull-left chat-profile-image"/>
